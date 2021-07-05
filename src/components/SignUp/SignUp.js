@@ -1,46 +1,48 @@
 import React, { useContext, useState } from 'react'
 import FirebaseContext from '../Firebase/FirebaseContext'
+import { Link } from 'react-router-dom'
 
-const SignUp = () => {
+const SignUp = (props) => {
 
     const data = {
-        pseudo:'',
+        pseudo: '',
         email: '',
-        password: '',
-        confirmPassword:''
+        password: '', 
+        confirmPassword: ''
     }
+    const [dataLogin, setDataLogin] = useState(data)
+
+    const {pseudo, email, password, confirmPassword} = dataLogin
 
     const [error, setError] = useState('')
 
-    const firebase = useContext(FirebaseContext)
-    console.log(firebase)
-
-    const [logindata, setLoginData] = useState(data)
-
-    const {pseudo, email, password, confirmPassword} = logindata
-
     const handleChange = e => {
-        setLoginData({...logindata, [e.target.id]:e.target.value})
+       setDataLogin({...dataLogin, [e.target.id]: e.target.value})
     }
+
+    const firebase = useContext(FirebaseContext)
+
+
+    const btn = (pseudo === '' || email === '' || password === '' || password !== confirmPassword) ?
+    <button disabled className="formButton">Inscription</button> : <button className="formButton">Inscription</button>
 
     const handleSubmit = e => {
-        e.preventDefault();
-        const {email,password}= logindata;
-        firebase.signupUser(email,password)
-        .then(user => {
-            setLoginData({...data})
+        e.preventDefault()
+        const {email, password} = dataLogin
+        firebase.signupUser(email, password)
+        .then(user=>{
+            setDataLogin({...data})
+            props.history.push("/welcome")
         })
-        .catch(error =>{
+        .catch(error => {
             setError(error)
         })
+
     }
 
-    const errorMsg = error !== '' && <span>{error.message}</span>
 
-    const btn = pseudo === '' || email === '' || password === '' || confirmPassword !== password ?
-    <button disabled>Inscription</button>:<button>Inscription</button>
-
-
+    // * Gestion  des Erreurs
+    const errorMsg = error !== '' &&  <span>{error.message}</span>
     return (
         <div className="signUpLoginBox">
             <div className="slContainer">
@@ -49,8 +51,8 @@ const SignUp = () => {
                 </div>
                 <div className="formBoxRight">
                     <div className="formContent">
-                        <form onSubmit={handleSubmit}>
-                            {errorMsg}
+                        {errorMsg}
+                        <form onSubmit={handleSubmit}> 
                             <h2>Inscription</h2>
                             <div className="inputBox">
                                 <input type="text" id="pseudo" autoComplete="off" required value={pseudo} onChange={handleChange}/>
@@ -70,6 +72,9 @@ const SignUp = () => {
                             </div>
                             {btn}
                         </form>
+                        <div className="linkContainer">
+                            <Link className="simpleLink" to="/login">Déjà inscrit, connectez-vous.</Link>
+                        </div>
                     </div>
                 </div>
             </div>
