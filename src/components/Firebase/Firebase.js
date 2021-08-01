@@ -1,6 +1,7 @@
  import app from 'firebase/app'
  import 'firebase/auth'
 
+
  const config = {
     apiKey: "AIzaSyBR67h8UeT5tC44PYF82H0DHmg7fJXwLqU",
     authDomain: "marvel-quiz-db2d9.firebaseapp.com",
@@ -25,6 +26,5 @@
    signoutUser = () => this.auth.signOut()
     
  }  
- 
  export default Firebase
  

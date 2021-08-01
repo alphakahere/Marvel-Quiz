@@ -7,7 +7,6 @@ import Login from '../Login/Login';
 import SignUp from '../SignUp/SignUp';
 import ErrorPage from '../Error/ErrorPage';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
-
 function App() {
   return (
     <Router>

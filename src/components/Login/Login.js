@@ -13,7 +13,6 @@ const Login = () => {
     const history = useHistory()
 
     const firebase = useContext(FirebaseContext)
-    console.log(firebase)
 
     const handleSubmit = e =>{
         e.preventDefault()
@@ -23,10 +22,10 @@ const Login = () => {
             setPassword('')
             history.push("/welcome")
         })
-        .catch(error => {
+        .catch(e => {
             setEmail('')
             setPassword('')
-            setError(error)
+            setError(e)
         })
     }
 
