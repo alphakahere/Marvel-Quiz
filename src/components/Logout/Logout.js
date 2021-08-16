@@ -4,7 +4,6 @@ import FirebaseContext from '../Firebase/FirebaseContext'
 const Logout = () => {
 
     const [checked, setChecked] = useState(false)
-    console.log(checked)
 
     const firebase = useContext(FirebaseContext)
 

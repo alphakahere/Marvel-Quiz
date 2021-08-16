@@ -5,25 +5,46 @@ import Quiz from '../Quiz/Quiz'
 
 const Welcome = (props) => {
 
-    const [authUser, setAuthUser] = useState(null)
+    const [userSession, setUserSession] = useState(null)
+
+    const [userData, setUserData] = useState({})
+    const [loading, setLoading] = useState(true)
     const firebase = useContext(FirebaseContext)
 
 
     useEffect(() =>{
        const unlisten = firebase.auth.onAuthStateChanged(
-          authUser => {
-            authUser
-              ? setAuthUser(authUser)
+          userSession => {
+            userSession
+              ? setUserSession(userSession)
               : props.history.push("/")
           },
        );
+        
+       if(!!userSession){
+       firebase.user(userSession.uid)
+       .get()
+       .then((doc) => {
+           if(doc && doc.exists){
+                const myData = doc.data()
+                setUserData(myData)
+                setLoading(false) 
+           }
+       })
+       .catch(e => {
+            console.log(e)
+       })
+       }
+
+
        return () => {
            unlisten();
        }
-    });
+
+    }, [firebase, props.history, userSession]);
 
 
-    const welcome = authUser === null ?(
+    const welcome = userSession === null ?(
     <Fragment>
         <h1>Loading...</h1>
     </Fragment>
@@ -32,9 +53,9 @@ const Welcome = (props) => {
          <div className="quiz-bg">
              <div className="container">
                  <Logout />
-                 <Quiz />
-                Welcome
+                 <Quiz userData = {userData} loading={loading}/>
             </div>
+            
         </div>
     </Fragment>
     )

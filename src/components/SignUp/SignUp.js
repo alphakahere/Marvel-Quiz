@@ -23,13 +23,20 @@ const SignUp = (props) => {
     const firebase = useContext(FirebaseContext)
 
 
+
     const btn = (pseudo === '' || email === '' || password === '' || password !== confirmPassword) ?
     <button disabled className="formButton">Inscription</button> : <button className="formButton">Inscription</button>
 
     const handleSubmit = e => {
         e.preventDefault()
-        const {email, password} = dataLogin
+        const {pseudo,email, password} = dataLogin
         firebase.signupUser(email, password)
+        .then((authUser) => {
+            firebase.user(authUser.user.uid).set({
+                pseudo, 
+                email
+            })
+        })
         .then(user=>{
             setDataLogin({...data})
             props.history.push("/welcome")
