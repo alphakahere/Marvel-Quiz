@@ -23,7 +23,7 @@ const Quiz = (props) => {
 
 
     const storedQuestionsData = useRef(null);
-    const maxQuestions = 10 
+    const maxQuestions = 3 
     const pseudo = props.userData.pseudo
     const loading = props.loading
 
@@ -44,11 +44,13 @@ const Quiz = (props) => {
             });
         }
         const fetchedArrayQuiz = QuizMarvel[0].quizz[level[quizLevel]]
-        if(fetchedArrayQuiz.length >= maxQuestions) {
-            const newArray = fetchedArrayQuiz.map(({answer, ...keepRest}) => keepRest)
-            setStoredQuestions(newArray)
-            storedQuestionsData.current = fetchedArrayQuiz
-            setisLoading(false)
+        if(fetchedArrayQuiz) {
+            if(fetchedArrayQuiz.length >= maxQuestions) {
+                const newArray = fetchedArrayQuiz.map(({answer, ...keepRest}) => keepRest)
+                setStoredQuestions(newArray)
+                storedQuestionsData.current = fetchedArrayQuiz
+                setisLoading(false)
+            }
         }
        
     }, [level, quizLevel, pseudo, showMsg, loading])
@@ -67,7 +69,6 @@ const Quiz = (props) => {
             setQuizEnd(true)
             if(gradePercent >= 50) {
                 setQuizLevel(quizLevel + 1)
-
             }
         }else {
             setIdQuestion(idQuestion+1)
@@ -105,6 +106,31 @@ const Quiz = (props) => {
 
     }
 
+    const loadQuestions = param => {
+        if (quizLevel === level.length) {
+            setQuizLevel(0)
+        }
+        let fetchedArrayQuiz = []
+        fetchedArrayQuiz = QuizMarvel[0].quizz[level[param]]
+        console.log(param)
+        console.log(fetchedArrayQuiz)
+        if(fetchedArrayQuiz) {
+
+            if(fetchedArrayQuiz.length >= maxQuestions) {
+                const newArray = fetchedArrayQuiz.map(({answer, ...keepRest}) => keepRest)
+                setStoredQuestions(newArray)
+                storedQuestionsData.current = fetchedArrayQuiz
+                setisLoading(false)
+                setIdQuestion(0)
+                setBtnDisabled(true)
+                setUserAnswer(null)
+                setQuizEnd(false)
+                setScore(0)
+                setPercent(0)
+            }
+        }
+    }
+
     const welcome = !isLoading && ( quizEnd ? (
         <QuizOver 
             ref = {storedQuestionsData}
@@ -113,6 +139,7 @@ const Quiz = (props) => {
             score = {score}
             quizLevel = {quizLevel}
             percent = {percent}
+            loadQuestions = {loadQuestions}
         />
     ) : (
         <>
