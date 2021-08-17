@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import Levels from '../Levels/Levels'
 import { QuizMarvel } from '../QuizMarvel/QuizMarvel'
 import ProgressBar from '../ProgressBar/ProgressBar'
@@ -17,12 +17,12 @@ const Quiz = (props) => {
     const [btnDisabled, setBtnDisabled] = useState(true)
     const [userAnswer, setUserAnswer] = useState(null)
     const [score, setScore] = useState(0)
-    const [storedQuestionsData, setStoredQuestionsData] = useState([])
     const [showMsg, setShowMsg] = useState(false)
     const [quizEnd, setQuizEnd] = useState(false)
+    const [percent, setPercent] = useState(0)
 
 
-
+    const storedQuestionsData = useRef(null);
     const maxQuestions = 10 
     const pseudo = props.userData.pseudo
     const loading = props.loading
@@ -47,7 +47,7 @@ const Quiz = (props) => {
         if(fetchedArrayQuiz.length >= maxQuestions) {
             const newArray = fetchedArrayQuiz.map(({answer, ...keepRest}) => keepRest)
             setStoredQuestions(newArray)
-            setStoredQuestionsData(fetchedArrayQuiz)
+            storedQuestionsData.current = fetchedArrayQuiz
             setisLoading(false)
         }
        
@@ -58,15 +58,22 @@ const Quiz = (props) => {
         setBtnDisabled(false)
     }
 
+    const getPercentage = (maxQuest, ourScore) => (ourScore/maxQuest ) * 100;
     const nextQuestion = () => {
         if(idQuestion === maxQuestions -1) {
             // End
+            const gradePercent =  getPercentage(maxQuestions, score);
+            setPercent(gradePercent)
             setQuizEnd(true)
+            if(gradePercent >= 50) {
+                setQuizLevel(quizLevel + 1)
+
+            }
         }else {
             setIdQuestion(idQuestion+1)
         }
 
-        const goodAnswer = storedQuestionsData[idQuestion].answer
+        const goodAnswer = storedQuestionsData.current[idQuestion].answer
         if (goodAnswer  === userAnswer) {
             setScore(score+1)
             setUserAnswer(null)
@@ -98,8 +105,15 @@ const Quiz = (props) => {
 
     }
 
-    const welcome = !isLoading && ( !quizEnd ? (
-        <QuizOver asked = {storedQuestionsData}/>
+    const welcome = !isLoading && ( quizEnd ? (
+        <QuizOver 
+            ref = {storedQuestionsData}
+            levelNames = {level}
+            maxQuestions = {maxQuestions}
+            score = {score}
+            quizLevel = {quizLevel}
+            percent = {percent}
+        />
     ) : (
         <>
              <div>
@@ -128,14 +142,7 @@ const Quiz = (props) => {
         </>
     ))
 
-    return (
-        <>
-        {
-             welcome
-        }
-        
-        </>
-    )
+    return welcome
 }
 
-export default Quiz
+export default React.memo(Quiz)
