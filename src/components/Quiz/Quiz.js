@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.min.css'
 toast.configure()
 const Quiz = (props) => {
 
-    const [level, setLevel] = useState(["debutant", "confirme", "expert"])
+    const [level] = useState(["debutant", "confirme", "expert"])
     const [quizLevel, setQuizLevel] = useState(0)
     const [storedQuestions, setStoredQuestions] = useState([])
     const [idQuestion, setIdQuestion] = useState(0)
@@ -69,7 +69,6 @@ const Quiz = (props) => {
     const getPercentage = (maxQuest, ourScore) => (ourScore / maxQuest) * 100;
     const nextQuestion = () => {
 		const goodAnswer = storedQuestionsData.current[idQuestion].answer;
-		console.log(goodAnswer === userAnswer);
 		if (goodAnswer === userAnswer) {
 			setScore(score + 1);
 			setUserAnswer(null);
@@ -99,7 +98,6 @@ const Quiz = (props) => {
 			});
 		}
 
-		console.log(score);
 
 		if (idQuestion === maxQuestions - 1) {
 			// End
@@ -118,8 +116,6 @@ const Quiz = (props) => {
         }
         let fetchedArrayQuiz = []
         fetchedArrayQuiz = QuizMarvel[0].quizz[level[param]]
-        console.log(param)
-        console.log(fetchedArrayQuiz)
         if(fetchedArrayQuiz) {
 
             if(fetchedArrayQuiz.length >= maxQuestions) {

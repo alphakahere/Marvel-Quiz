@@ -1,5 +1,6 @@
 import React, { useState, Fragment, useEffect, useContext } from 'react'
 import FirebaseContext from '../Firebase/FirebaseContext'
+import Loader from '../Loader'
 import Logout from '../Logout/Logout'
 import Quiz from '../Quiz/Quiz'
 
@@ -17,7 +18,7 @@ const Welcome = (props) => {
           userSession => {
             userSession
               ? setUserSession(userSession)
-              : props.history.push("/")
+              : setTimeout(() => {props.history.push("/")}, 2000);
           },
        );
         
@@ -46,7 +47,10 @@ const Welcome = (props) => {
 
     const welcome = userSession === null ?(
     <Fragment>
-        <h1>Loading...</h1>
+        <Loader 
+            loaderMsg={"Authentification..."}
+            styling={{textAlign: 'center', color: 'red'}}
+        />
     </Fragment>
     ) : (
     <Fragment>

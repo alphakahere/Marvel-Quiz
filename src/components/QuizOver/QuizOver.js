@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import {GiTrophyCup} from 'react-icons/gi'
+import Loader from '../Loader/'
 
 const QuizOver = React.forwardRef((props, ref) => {
         const {levelNames, maxQuestions, score, quizLevel, percent, loadQuestions} = props
         const [asked, setAsked] = useState([])
-        console.log(levelNames.length)
 
         useEffect(() => {
             setAsked(ref.current)
@@ -76,8 +76,10 @@ const QuizOver = React.forwardRef((props, ref) => {
         ) : (
             <tr>
                 <td colSpan="3">
-                    <p style={{textAlign: 'center', color: 'red'}}>Pas de réponses!</p> 
-                    <div className="loader"></div>
+                   <Loader
+                        loaderMsg={"Pas de réponses"} 
+                        styling={{textAlign: 'center', color: 'red'}}
+                   /> 
                 </td>
             </tr>
         )
