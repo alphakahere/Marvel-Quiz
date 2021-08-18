@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
+import ReactTooltip from 'react-tooltip';
 import FirebaseContext from '../Firebase/FirebaseContext'
 
 const Logout = () => {
@@ -26,8 +27,13 @@ const Logout = () => {
                     checked={checked}
                     onChange={handleChange}
                 />
-                <span className="slider round"></span>
+                <span className="slider round" data-tip="Déconnexion"></span>
             </label>
+            <ReactTooltip 
+                place="left"
+                type="dark"
+                effect="solid"
+            />
         </div>
     )
 }
