@@ -4,9 +4,11 @@ import { QuizMarvel } from '../QuizMarvel/QuizMarvel'
 import ProgressBar from '../ProgressBar/ProgressBar'
 import QuizOver from '../QuizOver/QuizOver'
 import { toast ,} from 'react-toastify'
+import {FaChevronRight} from 'react-icons/fa'
 import 'react-toastify/dist/ReactToastify.min.css'
-toast.configure()
 
+
+toast.configure()
 const Quiz = (props) => {
 
     const [level, setLevel] = useState(["debutant", "confirme", "expert"])
@@ -161,7 +163,7 @@ const Quiz = (props) => {
                             className={`answerOptions ${userAnswer === option && "selected"}`}
                             onClick={() => submitAnswer(option)}
                         >
-                            {option}
+                            <FaChevronRight /> {option}
                         </p>
                     ))
                 }

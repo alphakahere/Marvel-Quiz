@@ -8,6 +8,7 @@ import SignUp from '../SignUp/SignUp';
 import ErrorPage from '../Error/ErrorPage';
 import ForgetPassword from '../ForgetPassword/ForgetPassword';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import {IconContext} from 'react-icons'
 function App() {
   
   return (
@@ -15,11 +16,13 @@ function App() {
       <Header />
 
       <Switch>
-        <Route exact path="/" component={Landing} />
-        <Route path="/welcome" component={Welcome} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={SignUp} />
-        <Route path="/forgetpassword" component = {ForgetPassword} />
+        <IconContext.Provider value={{ style: { verticalAlign: 'middle' } }}>
+          <Route exact path="/" component={Landing} />
+          <Route path="/welcome" component={Welcome} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={SignUp} />
+          <Route path="/forgetpassword" component = {ForgetPassword} />
+        </IconContext.Provider>
 
         <Route component={ErrorPage} />
       </Switch>
