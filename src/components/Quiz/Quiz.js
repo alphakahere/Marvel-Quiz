@@ -55,56 +55,60 @@ const Quiz = (props) => {
        
     }, [level, quizLevel, pseudo, showMsg, loading])
 
+    useEffect(() => {
+		setPercent(getPercentage(maxQuestions, score));
+    }, [score]);
+
     const submitAnswer = (selectedAnswer) => {
-        setUserAnswer(selectedAnswer)
-        setBtnDisabled(false)
-    }
+		setUserAnswer(selectedAnswer);
+		setBtnDisabled(false);
+    };
 
-    const getPercentage = (maxQuest, ourScore) => (ourScore/maxQuest ) * 100;
+    const getPercentage = (maxQuest, ourScore) => (ourScore / maxQuest) * 100;
     const nextQuestion = () => {
-        if(idQuestion === maxQuestions -1) {
-            // End
-            const gradePercent =  getPercentage(maxQuestions, score);
-            setPercent(gradePercent)
-            setQuizEnd(true)
-            if(gradePercent >= 50) {
-                setQuizLevel(quizLevel + 1)
-            }
-        }else {
-            setIdQuestion(idQuestion+1)
-        }
+		const goodAnswer = storedQuestionsData.current[idQuestion].answer;
+		console.log(goodAnswer === userAnswer);
+		if (goodAnswer === userAnswer) {
+			setScore(score + 1);
+			setUserAnswer(null);
+			setBtnDisabled(true);
+			toast.success("Bravo +1", {
+				position: "top-right",
+				autoClose: 2000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: false,
+				progress: undefined,
+				bodyClassName: "toastify-color",
+			});
+		} else {
+			setUserAnswer(null);
+			setBtnDisabled(true);
+			toast.error("Raté 0", {
+				position: "top-right",
+				autoClose: 2000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: false,
+				progress: undefined,
+				bodyClassName: "toastify-color",
+			});
+		}
 
-        const goodAnswer = storedQuestionsData.current[idQuestion].answer
-        if (goodAnswer  === userAnswer) {
-            setScore(score+1)
-            setUserAnswer(null)
-            setBtnDisabled(true)
-            toast.success('Bravo +1', {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                bodyClassName: 'toastify-color',
-            });
-        } else {
-            setUserAnswer(null)
-            setBtnDisabled(true)
-            toast.error('Raté 0', {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                bodyClassName: 'toastify-color',
-            });
-        }
+		console.log(score);
 
-    }
+		if (idQuestion === maxQuestions - 1) {
+			// End
+			setQuizEnd(true);
+			if (percent >= 50) {
+				setQuizLevel(quizLevel + 1);
+			}
+		} else {
+			setIdQuestion(idQuestion + 1);
+		}
+    };
 
     const loadQuestions = param => {
         if (quizLevel === level.length) {
