@@ -148,7 +148,10 @@ const Quiz = (props) => {
     ) : (
         <>
              <div>
-                <Levels />
+                <Levels 
+                    levelNames={level} 
+                    quizLevel = {quizLevel}
+                />
                 <ProgressBar idQuestion={idQuestion} maxQuestions={maxQuestions} />                
                 <h2>{storedQuestions[idQuestion].question}</h2>
                 {
