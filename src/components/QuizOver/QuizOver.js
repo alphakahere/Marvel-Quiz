@@ -12,14 +12,27 @@ const QuizOver = React.forwardRef((props, ref) => {
         const [asked, setAsked] = useState([])
         const [openModal, setOpenModal] = useState(false)
         const [charactersInfos, setCharactersInfos] = useState([])
-
         const [loading, setLoading] = useState(true)
 
 
 
         useEffect(() => {
             setAsked(ref.current)
+            const date = localStorage.getItem('dataStorageDate')
+            checkedDataAge(date)
         }, [ref])
+
+        const checkedDataAge = date => {
+            const today = Date.now()
+            const timeDifferrence = today - date;
+            const daysDifferrence = timeDifferrence / (1000*3600*24)
+            
+            if (daysDifferrence >= 15) {
+                localStorage.clear()
+                localStorage.setItem('dataStorageDate', Date.now())
+
+            }
+         }
 
 
         const API_PUBLIC_KEY = process.env.REACT_APP_MARVEL_API_KEY
@@ -28,16 +41,28 @@ const QuizOver = React.forwardRef((props, ref) => {
         const showModal = id => {
             setOpenModal(true)
 
-            axios
-            .get(`http://gateway.marvel.com/v1/public/characters/${id}?ts=1&apikey=${API_PUBLIC_KEY}&hash=${hash}`)
-            .then((response) => {
-                // console.log(response)
-                setCharactersInfos(response.data)
+            if(localStorage.getItem(id)) {
+                setCharactersInfos(JSON.parse(localStorage.getItem(id)))
                 setLoading(false)
-            })
-            .catch((e) => {
-                console.log(e)
-            })
+            } else {
+                axios
+                .get(`http://gateway.marvel.com/v1/public/characters/${id}?ts=1&apikey=${API_PUBLIC_KEY}&hash=${hash}`)
+                .then((response) => {
+                    // console.log(response)
+                    setCharactersInfos(response.data)
+                    setLoading(false)
+                    localStorage.setItem(id, JSON.stringify(response.data))
+                    if(!localStorage.getItem('dataStorageDate')) {
+                        localStorage.setItem('dataStorageDate', Date.now())
+                    }
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
+            }
+           
+
+            
         }
 
         const hideModal = () => {
