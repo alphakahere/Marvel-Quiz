@@ -3,7 +3,6 @@ import React from "react";
 const ProgressBar = ({ idQuestion, maxQuestions }) => {
 	const actualQuestion = idQuestion + 1;
 	const progressPercent = (100 / 10) * actualQuestion;
-	console.log(progressPercent);
 	return (
 		<>
 			<div className="percentage">
