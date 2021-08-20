@@ -25,7 +25,7 @@ const Quiz = (props) => {
 
 
     const storedQuestionsData = useRef(null);
-    const maxQuestions = 3 
+    const maxQuestions = 1 
     const pseudo = props.userData.pseudo
     const loading = props.loading
 
