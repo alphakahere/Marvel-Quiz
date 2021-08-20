@@ -14,7 +14,9 @@ const QuizOver = React.forwardRef((props, ref) => {
         const [charactersInfos, setCharactersInfos] = useState([])
         const [loading, setLoading] = useState(true)
 
-
+        const capitaliseFirstLetter = string => {
+            return string.charAt(0).toUpperCase()+string.slice(1)
+        }
 
         useEffect(() => {
             setAsked(ref.current)
@@ -159,10 +161,48 @@ const QuizOver = React.forwardRef((props, ref) => {
                         <h2>{charactersInfos.data.results[0].name}</h2>
                     </div>
                     <div className="modalBody">
-                        <h3>Body</h3>
+                        <div className="comicImage">
+                            <img 
+                                src={charactersInfos.data.results[0].thumbnail.path+'.'+charactersInfos.data.results[0].thumbnail.extension} 
+                                alt={charactersInfos.data.results[0].name} 
+                            />
+                            <p>{charactersInfos.attributionText}</p>
+                        </div>
+                        <div className="comicDetails">
+                            <h3>Description</h3>
+                            <p>
+                            {
+                                charactersInfos.data.results[0].description ? (
+                                <>
+                                    {charactersInfos.data.results[0].description}
+                                </>
+                                ) : (
+                                <>
+                                    Description Indisponible...
+                                </>
+                                )
+                            }
+                            </p>
+                            {
+                                // console.log( charactersInfos.data.results[0].urls[1])
+                                charactersInfos.data.results[0].urls && 
+                                charactersInfos.data.results[0].urls.map((url, index) => {
+                                    return (
+                                        <a 
+                                            href={url.url}
+                                            key={index}
+                                            target="_blank"
+                                            rel="noreferrer noopenner"
+                                        >
+                                        {capitaliseFirstLetter(url.type)}
+                                        </a>
+                                    )
+                                })
+                            }
+                        </div>
                     </div>
                     <div className="modalFooter">
-                        <button className="modalBtn">Fermer</button>
+                        <button className="modalBtn" onClick={hideModal}>Fermer</button>
                     </div>
                 </Modal>
             </>
