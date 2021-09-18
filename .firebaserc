@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "marvel-quiz-db2d9",
+    "staging": "marvel-quiz-db2d9"
+  },
+  "targets": {}
+}
